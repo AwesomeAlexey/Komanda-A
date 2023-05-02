@@ -7,3 +7,6 @@
 	path = 3rd_party/cppnetworking
 	url = https://gitlab.com/msurov/cppnetworking.git
 	branch = master
+[submodule "3rd_party/bsplines"]
+	path = 3rd_party/bsplines
+	url = https://github.com/msurov/bsplines.git

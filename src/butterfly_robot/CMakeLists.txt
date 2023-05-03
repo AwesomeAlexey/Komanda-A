@@ -11,7 +11,6 @@ add_library(butterfly_robot STATIC
     inc/butterfly_robot/servo.h
     src/camera.cpp
     inc/butterfly_robot/camera.h
-    inc/butterfly_robot/serializer.h
     src/butterfly.cpp
     inc/butterfly_robot/butterfly.h
 )

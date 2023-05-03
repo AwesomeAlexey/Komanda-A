@@ -9,8 +9,8 @@ using namespace std;
 
 Camera::Camera()
 {
-    host = "";
-    port = 0;
+    _host = "";
+    _port = 0;
 }
 
 Camera::~Camera()
@@ -20,17 +20,17 @@ Camera::~Camera()
 void Camera::init(Json::Value const& jscfg)
 {
     auto const& jscam = json_get(jscfg, "camera");
-    json_get<std::string>(jscam, "ip", host);
-    json_get(jscam, "port", port);
+    json_get<std::string>(jscam, "ip", _host);
+    json_get(jscam, "port", _port);
 }
 
 void Camera::start()
 {
-    if (host.empty())
+    if (_host.empty())
         throw_runtime_error("camera is not initialized yet; run init(...)");
 
-    auto cnct = Connection::connect(host, port);
-    con_reader = ser::make_pack_reader([cnct](char* p, int n) {
+    auto cnct = Connection::connect(_host, _port);
+    _con_reader = ser::make_pack_reader([cnct](char* p, int n) {
         if (!cnct)
             return -1;
         return cnct->read(p, n, false);
@@ -45,21 +45,24 @@ void Camera::start()
 
 void Camera::stop()
 {
-    con_reader = nullptr;
+    _con_reader = nullptr;
 }
 
 Camera::Status Camera::get(int64_t& ts_usec, double& x, double& y)
 {
-    if (!con_reader)
-        throw_runtime_error("not connected to cumera; call run();");
+    if (!_con_reader)
+        throw_runtime_error("it seems camera is down");
 
     ser::Packet pack;
-    int status = con_reader->fetch_next(pack);
+    int status = _con_reader->fetch_next(pack);
     if (status < 0)
-        throw_runtime_error("connection closed");
+        throw_runtime_error("camera connection closed, no data");
 
     if (status == 0)
+    {
+        dbg_msg("camera no data");
         return Status::NoData;
+    }
 
     bool good;
     status = pack.get("good", good);
@@ -67,7 +70,10 @@ Camera::Status Camera::get(int64_t& ts_usec, double& x, double& y)
         throw_runtime_error("camera data corrupted");
 
     if (!good)
+    {
+        dbg_msg("bad flag received");
         return Status::Failed;
+    }
 
     status = pack.get("x", x, "y", y, "ts", ts_usec);
     if (status <= 0)

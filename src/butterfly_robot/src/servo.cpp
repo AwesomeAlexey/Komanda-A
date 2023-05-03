@@ -21,6 +21,8 @@ void Servo::start()
     servocmd::init_cmd_start(t, pack);
     if (!m_connection->write(reinterpret_cast<char*>(&pack), sizeof(pack)))
         throw_runtime_error("servo connection broken");
+
+    dbg_msg("Connected to the servo");
 }
 
 void Servo::stop()

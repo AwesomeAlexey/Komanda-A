@@ -2,6 +2,7 @@
 #include <cppmisc/traces.h>
 #include <cppmisc/timing.h>
 #include <cppmisc/threads.h>
+#include <butterfly_robot/camera.h>
 
 
 int test(Json::Value const& jscfg)
@@ -12,7 +13,7 @@ int test(Json::Value const& jscfg)
     std::shared_ptr<Camera> camera = Camera::capture_instance();
     camera->init(jscfg);
     camera->start();
-    for (int i = 0; i < 1000; ++i)
+    for (int i = 0; i < 10; ++i)
     {
         auto status = camera->get(t, x, y);
         if (failed(status))

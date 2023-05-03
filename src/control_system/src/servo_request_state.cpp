@@ -1,7 +1,7 @@
 #include <cppmisc/traces.h>
 #include <cppmisc/argparse.h>
 #include <cppmisc/threads.h>
-#include "../src/servo.h"
+#include <butterfly_robot/servo.h>
 
 
 int test_1(Json::Value const& jscfg)

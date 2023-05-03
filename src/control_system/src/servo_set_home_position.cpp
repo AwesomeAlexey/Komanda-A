@@ -17,15 +17,6 @@ int feedback_loop(Json::Value const& jscfg)
     int64_t t;
     double theta, dtheta;
     bool stop = false;
-    char buf[1024];
-    int sz;
-    std::fstream f("/tmp/log.txt", std::ios_base::out);
-
-    if (f.bad())
-    {
-        err_msg("can't open log file");
-        return -1;
-    }
 
     while (!stop)
     {
@@ -37,19 +28,10 @@ int feedback_loop(Json::Value const& jscfg)
             err_msg("received corrupted packet");
             return -1;
         }
-        double torque = 0.;
+        double torque = -0.5 * std::clamp(theta, -0.5, 0.5) - 0.1 * dtheta;
         torque = std::clamp(torque, -0.1, 0.1);
         servo->set_torque(torque);
-        sz = snprintf(buf, sizeof(buf), 
-            "t = %ld, theta = %f, dtheta = %f\n", 
-            t, theta, dtheta
-        );
-        if (sz < 0)
-        {
-            err_msg("can't format message");
-            return -1;
-        }
-        f.write(buf, sz);
+        printf("t = %ld, theta = %f, dtheta = %f, torque = %f\n", t, theta, dtheta, torque);
     }
 
     servo->set_torque(0.0);

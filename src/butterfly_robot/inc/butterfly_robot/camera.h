@@ -10,9 +10,9 @@
 class Camera
 {
 private:
-    ser::PacketReaderPtr con_reader;
-    std::string     host;
-    int             port;
+    ser::PacketReaderPtr _con_reader;
+    std::string _host;
+    int _port;
 
     Camera();
     Camera(Camera const&) = delete;

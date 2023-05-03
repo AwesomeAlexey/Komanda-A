@@ -4,7 +4,7 @@
 #include <memory>
 #include <networking/tcp.h>
 #include <cppmisc/json.h>
-#include "serializer.h"
+#include <cppmisc/serializer.h>
 
 
 class Camera

@@ -38,11 +38,10 @@ public:
             _phi_prev = phi;
         }
 
-        phi = std::max(phi, _phi_prev);
-        _phi_prev = phi;
+        // phi = std::max(phi, _phi_prev);
+        // _phi_prev = phi;
         auto x = makevec(theta, phi, dtheta, dphi);
         double phi_0_pi = normalize_angle(phi, 0, _PI);
-
         RVec3 n = _n_sp(phi_0_pi).transpose();
         Vec3 B = _B_sp(phi_0_pi);
         RVec3 K = _K_sp(phi_0_pi).transpose();
@@ -51,6 +50,10 @@ public:
         double w = _sliding_coef * sign(double(n * xi) * double(n * B));
         double v = K * xi;
         double u = _u_sp(phi_0_pi) + v + w;
+
+        printf("theta=%2.3f, phi=%2.3f, dtheta=%2.3f, dphi=%2.3f, u=%2.3f, v=%2.3f, w=%2.3f\n",
+            theta, phi, dtheta, dphi, u, v, w);
+
         return u;
     }
 

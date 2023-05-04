@@ -67,7 +67,7 @@ int main(int argc, char* argv[])
 {
   if (argc == 1)
   {
-    err_msg("usage: %s path/to/feedback/config.json", argv[0]);
+    err_msg("usage: ", argv[0], " path/to/feedback/config.json");
     return -1;
   }
   if (argc < 1)

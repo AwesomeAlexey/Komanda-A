@@ -21,7 +21,6 @@ int launch(Json::Value const& jscfg, Json::Value const& ctrlcfg)
     SlidingController ctrl;
     ctrl.load(ctrlcfg);
 
-
     auto f = [&ctrl](BflySignals& signals) {
         if (signals.t < 0.1)
             return true;

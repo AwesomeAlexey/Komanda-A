@@ -2,10 +2,10 @@
 
 #include <cmath>
 
-inline const double _PI_2 = std::acos(0.0);
-inline const double _PI = 2 * _PI_2;
-inline const double _2_PI = 2 * _PI;
-inline const double _4_PI = 4 * _PI;
+inline constexpr double _PI = 3.1415926535897932384626433832795;
+inline constexpr double _PI_2 = _PI / 2;
+inline constexpr double _2_PI = 2 * _PI;
+inline constexpr double _4_PI = 4 * _PI;
 
 template <typename T>
 inline bool in_diap(T const& val, T const& minval, T const& maxval)

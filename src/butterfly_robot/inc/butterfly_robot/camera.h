@@ -28,7 +28,7 @@ public:
     };
     Status get(int64_t& ts_usec, double& x, double& y);
 
-    void start();
+    void start(bool blocking_read=false);
     void stop();
 
     static std::shared_ptr<Camera> capture_instance();

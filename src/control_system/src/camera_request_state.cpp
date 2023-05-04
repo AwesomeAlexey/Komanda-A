@@ -12,7 +12,7 @@ int test(Json::Value const& jscfg)
 
     std::shared_ptr<Camera> camera = Camera::capture_instance();
     camera->init(jscfg);
-    camera->start();
+    camera->start(true);
     for (int i = 0; i < 10; ++i)
     {
         auto status = camera->get(t, x, y);

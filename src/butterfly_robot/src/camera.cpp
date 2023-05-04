@@ -24,16 +24,16 @@ void Camera::init(Json::Value const& jscfg)
     json_get(jscam, "port", _port);
 }
 
-void Camera::start()
+void Camera::start(bool blocking_read)
 {
     if (_host.empty())
         throw_runtime_error("camera is not initialized yet; run init(...)");
 
     auto cnct = Connection::connect(_host, _port);
-    _con_reader = ser::make_pack_reader([cnct](char* p, int n) {
+    _con_reader = ser::make_pack_reader([cnct,blocking_read](char* p, int n) {
         if (!cnct)
             return -1;
-        return cnct->read(p, n, false);
+        return cnct->read(p, n, blocking_read);
     });
     char buf[1024];
     int len = ser::pack(buf, sizeof(buf), 

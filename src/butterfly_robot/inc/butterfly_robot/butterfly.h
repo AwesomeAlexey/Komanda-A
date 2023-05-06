@@ -4,6 +4,8 @@
 #include <stdexcept>
 #include <cppmisc/json.h>
 #include <utils/filters.h>
+#include <utils/delay_filter.h>
+#include <utils/diff_filter.h>
 #include "servo.h"
 #include "camera.h"
 
@@ -31,7 +33,10 @@ private:
 
     EulerDiff   m_diff_x;
     EulerDiff   m_diff_y;
+    DelayFilt   m_delay_theta;
+    DelayFilt   m_delay_dtheta;
 
+    int64_t     m_sync_delay;
     double      m_theta, m_dtheta;
     double      m_x, m_y;
     double      m_vx, m_vy;

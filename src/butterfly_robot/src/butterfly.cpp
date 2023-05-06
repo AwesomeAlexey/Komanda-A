@@ -24,13 +24,19 @@ void Butterfly::init(Json::Value const& cfg)
 {
     info_msg("initializing hardware..");
 
-    auto const& butcfg = json_get(cfg, "controller");
+    auto const& butcfg = json_get(cfg, "butterfly");
+    m_sync_delay = json_get<int64_t>(butcfg, "cam_delay_usec");
+    if (!in_diap<int64_t>(m_sync_delay, 0, 100'000))
+        throw_invalid_argument("parameter cam_delay_usec is expected to be within ", 0, 1e+5, ", but it is ", m_sync_delay);
 
     m_servo = Servo::capture_instance();
     m_servo->init(cfg);
 
     m_camera = Camera::capture_instance();
     m_camera->init(cfg);
+
+    m_delay_theta.init(m_sync_delay);
+    m_delay_dtheta.init(m_sync_delay);
 
     info_msg("done");
 }
@@ -49,6 +55,8 @@ void Butterfly::measure()
 
     int64_t t_cam;
     auto camstatus = m_camera->get(t_cam, m_x, m_y);
+    double theta_delayed = m_delay_theta.process(t_servo, m_theta);
+    double dtheta_delayed = m_delay_dtheta.process(t_servo, m_dtheta);
 
     switch (camstatus)
     {
@@ -56,12 +64,10 @@ void Butterfly::measure()
     {
         m_vx = m_diff_x.process(t_cam, m_x);
         m_vy = m_diff_y.process(t_cam, m_y);
-
         double alpha = atan2(m_x, m_y);
         double dalpha = (m_y * m_vx - m_x * m_vy) / (m_x * m_x + m_y * m_y);
-
-        m_phi = m_theta + alpha;
-        m_dphi = m_dtheta + dalpha;
+        m_phi = theta_delayed + alpha;
+        m_dphi = dtheta_delayed + dalpha;
         m_ball_found = true;
         break;
     }

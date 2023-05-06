@@ -1,6 +1,8 @@
 #pragma once
 
 #include <cmath>
+#include <cstdlib>
+
 
 inline constexpr double _PI = 3.1415926535897932384626433832795;
 inline constexpr double _PI_2 = _PI / 2;

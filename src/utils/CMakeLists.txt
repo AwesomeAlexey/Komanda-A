@@ -7,11 +7,13 @@ find_package(Eigen3 3.3 REQUIRED)
 
 add_library(utils STATIC
     inc/utils/diff_filter.h
+    inc/utils/delay_filter.h
     inc/utils/eigen.h
     inc/utils/filters.h
     inc/utils/json_bspline.h
     inc/utils/utils.h
     src/diff_filter.cpp
+    src/delay_filter.cpp
 )
 target_link_libraries(utils
     "${CMAKE_THREAD_LIBS}" 

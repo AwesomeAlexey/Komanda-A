@@ -9,7 +9,7 @@
         "port": 11005
     },
 
-    "controller": {
+    "butterfly": {
         "cam_delay_usec": 8000
     },
 

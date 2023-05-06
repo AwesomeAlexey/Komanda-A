@@ -59,10 +59,7 @@ Camera::Status Camera::get(int64_t& ts_usec, double& x, double& y)
         throw_runtime_error("camera connection closed, no data");
 
     if (status == 0)
-    {
-        dbg_msg("camera no data");
         return Status::NoData;
-    }
 
     bool good;
     status = pack.get("good", good);
@@ -71,7 +68,7 @@ Camera::Status Camera::get(int64_t& ts_usec, double& x, double& y)
 
     if (!good)
     {
-        dbg_msg("bad flag received");
+        dbg_msg("camera bad flag received");
         return Status::Failed;
     }
 

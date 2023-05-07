@@ -10,6 +10,12 @@
 using namespace std;
 
 
+void print_signals(BflySignals const& signals)
+{
+    printf("t=%2.3f,x=%2.2f,y=%2.2f,theta=%2.3f,dtheta=%2.3f,phi=%2.3f,dphi=%2.3f,u=%2.3f\n",
+        signals.t, signals.x, signals.y, signals.theta, signals.dtheta, signals.phi, signals.dphi, signals.torque);
+}
+
 int launch(Json::Value const& jscfg, Json::Value const& ctrlcfg)
 {
     Butterfly bfly;
@@ -28,6 +34,7 @@ int launch(Json::Value const& jscfg, Json::Value const& ctrlcfg)
             return false;
         double u = ctrl.process(signals.theta, signals.phi, signals.dtheta, signals.dphi);
         signals.torque = clamp(u, -0.1, 0.1);
+        print_signals(signals);
         return true;
     };
 

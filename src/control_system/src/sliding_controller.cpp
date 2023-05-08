@@ -42,17 +42,17 @@ double SlidingController::process(double theta, double phi, double dtheta, doubl
     }
     phi = std::max(phi, _phi_prev);
     _phi_prev = phi;
-    auto x = makevec(theta, phi, dtheta, dphi);
-    double phi_0_pi = normalize_angle(phi, 0, _PI);
-    RVec3 n = _n_sp(phi_0_pi).transpose();
-    Vec3 B = _B_sp(phi_0_pi);
-    RVec3 K = eval_K(phi_0_pi);
-    auto x_ref = _x_sp(phi_0_pi);
+    const auto x = makevec(theta, phi, dtheta, dphi);
+    const double phi_0_pi = normalize_angle(phi, 0, _PI);
+    const RVec3 n = _n_sp(phi_0_pi).transpose();
+    const Vec3 B = _B_sp(phi_0_pi);
+    const RVec3 K = eval_K(phi_0_pi);
+    const auto x_ref = _x_sp(phi_0_pi);
     Vec3 xi = _P * (x - x_ref);
     xi(0) = normalize_angle(xi(0), -_PI_2, _PI_2);
-    double w = _sliding_coef * sign(double(n * xi) * double(n * B));
-    double v = K * xi;
-    double u = _u_sp(phi_0_pi) + v;
+    const double w = _sliding_coef * sign(double(n * xi) * double(n * B));
+    const double v = K * xi + w;
+    const double u = _u_sp(phi_0_pi) + v;
     return u;
 }
 

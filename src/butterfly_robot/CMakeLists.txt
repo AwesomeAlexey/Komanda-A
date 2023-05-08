@@ -14,7 +14,7 @@ add_library(butterfly_robot STATIC
     src/butterfly.cpp
     inc/butterfly_robot/butterfly.h
 )
-target_link_libraries(butterfly_robot
+target_link_libraries(butterfly_robot PUBLIC
     cppmisc
     networking 
     Eigen3::Eigen 

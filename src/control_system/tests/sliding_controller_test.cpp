@@ -1,6 +1,7 @@
 #include <control_system/sliding_controller.h>
 #include <gtest/gtest.h>
 #include <cppmisc/traces.h>
+#include <utils/utils.h>
 
 std::string config_path;
 

@@ -3,9 +3,10 @@ cmake_minimum_required(VERSION 3.2)
 project(control_system CXX)
 add_executable(control_system
     src/control_system.cpp
+    src/sliding_controller.cpp
     inc/control_system/sliding_controller.h
 )
-target_link_libraries(control_system butterfly_robot)
+target_link_libraries(control_system PUBLIC butterfly_robot utils)
 target_include_directories(control_system PRIVATE inc)
 
 add_executable(servo_request_state src/servo_request_state.cpp)

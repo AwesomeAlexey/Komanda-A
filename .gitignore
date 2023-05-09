@@ -1,6 +1,7 @@
 obj
 out
 build
+dump
 log*.txt
 *.sublime-workspace
 .vscode

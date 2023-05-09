@@ -10,7 +10,7 @@
     },
 
     "butterfly": {
-        "cam_delay_usec": 5000
+        "cam_delay_usec": 0
     },
 
     "traces": {

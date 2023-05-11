@@ -4,19 +4,24 @@
 #include <fstream>
 #include <butterfly_robot/servo.h>
 #include <utils/filters.h>
+#include <utils/csv_logger.h>
 
 
 int feedback_loop(Json::Value const& jscfg)
 {
-    set_thread_rt_priotiy(-1, 90);
+    auto loggercfg = json_get(jscfg, "logger");
+    auto path = json_get<std::string>(loggercfg, "saveto");
+    CSVLogger logger(path, "t = %ld, theta = %f, dtheta = %f, torque = %f");
 
     auto servo = Servo::capture_instance();
     servo->init(jscfg);
-    servo->start();
-
+ 
     int64_t t;
     double theta, dtheta;
     bool stop = false;
+
+    set_thread_rt_priotiy(-1, 90);
+    servo->start();
 
     while (!stop)
     {
@@ -31,7 +36,7 @@ int feedback_loop(Json::Value const& jscfg)
         double torque = -0.5 * std::clamp(theta, -0.5, 0.5) - 0.1 * dtheta;
         torque = std::clamp(torque, -0.1, 0.1);
         servo->set_torque(torque);
-        printf("t = %ld, theta = %f, dtheta = %f, torque = %f\n", t, theta, dtheta, torque);
+        logger.write(t, theta, dtheta, torque);
     }
 
     servo->set_torque(0.0);

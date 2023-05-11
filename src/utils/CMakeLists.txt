@@ -12,8 +12,10 @@ add_library(utils STATIC
     inc/utils/filters.h
     inc/utils/json_bspline.h
     inc/utils/utils.h
+    inc/utils/csv_logger.h
     src/diff_filter.cpp
     src/delay_filter.cpp
+    src/csv_logger.cpp
 )
 target_link_libraries(utils
     "${CMAKE_THREAD_LIBS}" 

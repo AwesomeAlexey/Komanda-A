@@ -15,5 +15,9 @@
 
     "traces": {
         "enable": ["debug", "error", "warning", "all"]
+    },
+
+    "logger": {
+        "saveto": "/tmp/log.csv"
     }
 }

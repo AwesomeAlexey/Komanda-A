@@ -35,7 +35,7 @@ int launch(Json::Value const& jscfg, Json::Value const& ctrlcfg)
             return true;
         if (!signals.ball_found)
             return false;
-        double u = ctrl.process(signals.theta, signals.phi, signals.dtheta, signals.dphi);
+        double u = ctrl.process(signals.t, signals.theta, signals.phi, signals.dtheta, signals.dphi);
         signals.torque = clamp(u, -0.1, 0.1);
         logger->write(signals.t, signals.theta, signals.dtheta, signals.torque);
         return true;

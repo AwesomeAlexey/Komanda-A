@@ -58,8 +58,9 @@ TEST_F(SlidingControllerTest, verify_output)
     double theta = simdata.theta[i], 
       phi = simdata.phi[i],
       dtheta = simdata.dtheta[i], 
-      dphi = simdata.dphi[i];
-    double u = controller.process(theta, phi, dtheta, dphi);
+      dphi = simdata.dphi[i],
+      t = simdata.t[i];
+    double u = controller.process(t, theta, phi, dtheta, dphi);
     EXPECT_NEAR(u, simdata.u[i], 1e-5);
   }
 }

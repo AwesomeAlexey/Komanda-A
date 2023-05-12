@@ -10,6 +10,7 @@ add_library(utils STATIC
     inc/utils/delay_filter.h
     inc/utils/eigen.h
     inc/utils/filters.h
+    inc/utils/integrator.h
     inc/utils/json_bspline.h
     inc/utils/utils.h
     inc/utils/csv_logger.h

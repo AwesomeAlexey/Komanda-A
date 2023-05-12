@@ -17,6 +17,10 @@ add_executable(servo_set_home_position src/servo_set_home_position.cpp)
 target_link_libraries(servo_set_home_position butterfly_robot)
 target_include_directories(servo_set_home_position PRIVATE inc)
 
+add_executable(servo_reference_tracker src/servo_reference_tracker.cpp)
+target_link_libraries(servo_reference_tracker butterfly_robot)
+target_include_directories(servo_reference_tracker PRIVATE inc)
+
 add_executable(camera_request_state src/camera_request_state.cpp)
 target_link_libraries(camera_request_state butterfly_robot)
 target_include_directories(camera_request_state PRIVATE inc)

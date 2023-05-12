@@ -1,7 +1,7 @@
 #include <cppmisc/traces.h>
 #include <cppmisc/argparse.h>
 #include <cppmisc/threads.h>
-#include <fstream>
+#include <cppmisc/signals.h>
 #include <butterfly_robot/servo.h>
 #include <utils/filters.h>
 #include <utils/csv_logger.h>
@@ -19,6 +19,10 @@ int feedback_loop(Json::Value const& jscfg)
     int64_t t;
     double theta, dtheta;
     bool stop = false;
+
+    auto stop_handler = [&stop]() { stop = true; };
+    SysSignals::instance().set_sigint_handler(stop_handler);
+    SysSignals::instance().set_sigterm_handler(stop_handler);
 
     set_thread_rt_priotiy(-1, 50);
     servo->start();

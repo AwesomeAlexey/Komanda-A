@@ -18,6 +18,6 @@
     },
 
     "logger": {
-        "saveto": "/tmp/log.csv"
+        "saveto": "dump/log.csv"
     }
 }

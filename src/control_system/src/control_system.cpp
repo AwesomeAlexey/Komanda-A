@@ -28,7 +28,8 @@ int launch(Json::Value const& jscfg, Json::Value const& ctrlcfg)
     SysSignals::instance().set_sigterm_handler(stop_handler);
     SlidingController ctrl;
     ctrl.load(ctrlcfg);
-    auto logger = make_logger(jscfg, "t=%2.5f,theta=%2.5f,dtheta=%2.5f,u=%2.5f");
+    auto logger = make_logger(jscfg, 
+        "t=%2.5f,x=%2.5f,y=%2.5f,theta=%2.5f,dtheta=%2.5f,phi=%2.5f,dphi=%2.5f,u=%2.5f");
 
     auto f = [&ctrl,&logger](BflySignals& signals) {
         if (signals.t < 0.1)
@@ -37,7 +38,9 @@ int launch(Json::Value const& jscfg, Json::Value const& ctrlcfg)
             return false;
         double u = ctrl.process(signals.t, signals.theta, signals.phi, signals.dtheta, signals.dphi);
         signals.torque = clamp(u, -0.1, 0.1);
-        logger->write(signals.t, signals.theta, signals.dtheta, signals.torque);
+        logger->write(
+            signals.t, signals.x, signals.y, signals.theta, signals.dtheta, 
+            signals.phi, signals.dphi, signals.torque);
         return true;
     };
 

@@ -132,11 +132,13 @@ CSVLogger::CSVLogger(std::string const& filename, std::string const& format)
     if (!_file)
         throw_runtime_error("can't open file ", filename, " for writing");
 
+    _stop = false;
     _saver_thread = std::thread(&CSVLogger::_saver_loop, this);
 }
 
 CSVLogger::~CSVLogger()
 {
+    dbg_msg("CSVLogger::~CSVLogger");
     _stop = true;
     _dump_cache_signal.notify_all();
     _saver_thread.join();
@@ -182,10 +184,13 @@ void CSVLogger::_rotate_cache(int nbytes)
 
 void CSVLogger::_saver_loop()
 {
+    dbg_msg("CSVLogger::_saver_loop");
+
     while (true)
     {
         {
-            std::unique_lock<std::mutex> lock(_tasks_mutex);
+            std::mutex mutex;
+            std::unique_lock<std::mutex> lock(mutex);
             while (_cache_filled < _cache_volume * 3 / 4 && !_stop)
                 _dump_cache_signal.wait(lock);
         }

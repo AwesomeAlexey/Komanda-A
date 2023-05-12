@@ -1,7 +1,7 @@
 #include <cppmisc/traces.h>
 #include <cppmisc/argparse.h>
 #include <cppmisc/threads.h>
-#include <fstream>
+#include <cppmisc/signals.h>
 #include <butterfly_robot/servo.h>
 #include <utils/filters.h>
 #include <utils/csv_logger.h>
@@ -11,14 +11,18 @@ int feedback_loop(Json::Value const& jscfg)
 {
     auto loggercfg = json_get(jscfg, "logger");
     auto path = json_get<std::string>(loggercfg, "saveto");
-    CSVLogger logger(path, "t = %ld, theta = %f, dtheta = %f, torque = %f");
+    CSVLogger logger(path, "t=%f,theta=%f,dtheta=%f,torque=%f");
 
     auto servo = Servo::capture_instance();
     servo->init(jscfg);
- 
+
     int64_t t;
     double theta, dtheta;
     bool stop = false;
+
+    auto stop_handler = [&stop]() { stop = true; };
+    SysSignals::instance().set_sigint_handler(stop_handler);
+    SysSignals::instance().set_sigterm_handler(stop_handler);
 
     set_thread_rt_priotiy(-1, 50);
     servo->start();
@@ -36,7 +40,7 @@ int feedback_loop(Json::Value const& jscfg)
         double torque = -0.5 * std::clamp(theta, -0.5, 0.5) - 0.1 * dtheta;
         torque = std::clamp(torque, -0.1, 0.1);
         servo->set_torque(torque);
-        logger.write(t, theta, dtheta, torque);
+        logger.write(usec_to_sec(t), theta, dtheta, torque);
     }
 
     servo->set_torque(0.0);

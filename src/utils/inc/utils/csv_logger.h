@@ -33,7 +33,6 @@ public:
             warn_msg("can't format arguments, too long string");
             return false;
         }
-        
         return _append_cache(buf, n);
     }
 
@@ -45,7 +44,6 @@ private:
     const int _page_size = 0x400;
 
     std::mutex _change_cache_mutex;
-    std::mutex _tasks_mutex;
     std::condition_variable _dump_cache_signal;
     std::thread _saver_thread;
     bool _stop;

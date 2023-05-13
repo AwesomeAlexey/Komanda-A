@@ -5,7 +5,12 @@
 #include <butterfly_robot/servo.h>
 #include <utils/filters.h>
 #include <utils/csv_logger.h>
+#include <math.h>
 
+template<typename T>
+T sign(T val, double a){
+    return val / (abs(val) + a);
+}
 
 int feedback_loop(Json::Value const& jscfg)
 {
@@ -37,7 +42,31 @@ int feedback_loop(Json::Value const& jscfg)
             err_msg("received corrupted packet");
             return -1;
         }
+
         double torque = -0.5 * std::clamp(theta, -0.5, 0.5) - 0.1 * dtheta;
+        auto J = 0.891e-3;
+        auto a = 0.001;
+        auto c = 1.;
+        auto alpha = 1.;
+        auto cd = 2.15e-3;
+        auto cv = 5.67e-2;
+        auto beta = 0.0;
+        auto gamma = 1.;
+        auto delta = 1.;
+        auto T0 = 0.0;
+        auto maxRot = 5.;
+        auto maxRef2 = gamma * (delta^2);
+//        auto ref = 1.;
+//        auto dref = 0.;
+
+        auto ref = T0 + beta*t + gamma*sin(delta*t);
+        auto dref = beta + gamma*delta*cos(delta*t);
+
+        double p1 = (-1 / c) * (dtheta - dref);
+        double p2 = (alpha / c) + (cd / J) + (cv / J)*maxRot + maxRef2;
+        double p22 = p2*sign(theta - ref + c*(dtheta - dref))
+        double torque = J * (p1 + p22);
+
         torque = std::clamp(torque, -0.1, 0.1);
         servo->set_torque(torque);
         logger.write(usec_to_sec(t), theta, dtheta, torque);
